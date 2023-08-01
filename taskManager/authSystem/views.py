@@ -1,14 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import RegisterForm
 from django.contrib.auth.models import User
 import re
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-# czy hasla sa takie same
-# czy username wolny
-# czy email wolny
-# walidacja maila
-# walidacja hasla
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 
@@ -47,10 +44,24 @@ def register(request):
                     except ValidationError as e:
                         return render(request, 'register.html', {'passwordErrors': e.messages, 'form': RegisterForm()})
                     else:
-                        return render(request, 'register.html', {'message': 'success', 'form': RegisterForm()})
+                        user = User.objects.create_user(
+                            username=username, email=email, password=password1)
+                        return redirect('home')
                 else:
                     error = 'Invalid email. Try again.'
         else:
             error = 'Your passwords did not match. Try again.'
 
         return render(request, 'register.html', {'error': error, 'form': RegisterForm()})
+
+
+def login_user(request):
+    if request.method == 'GET':
+        return render(request, 'login_user.html', {'form': AuthenticationForm()})
+    else:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
