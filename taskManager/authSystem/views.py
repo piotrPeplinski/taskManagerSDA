@@ -5,7 +5,7 @@ import re
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
@@ -65,3 +65,15 @@ def login_user(request):
         if user is not None:
             login(request, user)
             return redirect('home')
+        else:
+            userExists = User.objects.filter(username=username).exists()
+            if userExists:
+                error = 'Incorrect password.'
+            else:
+                error = f'Account with username: {username} does not exist.'
+            return render(request, 'login_user.html', {'form': AuthenticationForm(), 'error': error})
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
