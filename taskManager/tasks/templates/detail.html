@@ -18,6 +18,12 @@
 
 <p>Created: {{task.createDate}}</p>
 
-<a href="{% url 'delete_task' task.id %}">Delete</a>
+{% if task.completeDate %}
+<p>Completed: {{task.completeDate}}</p>
+{% else %}
 <a href="{% url 'complete_task' task.id %}">Mark as completed</a>
+{% endif %}
+
+<a href="{% url 'delete_task' task.id %}">Delete</a>
+
 {% endblock content %}
