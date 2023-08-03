@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task
 from .forms import TaskForm
 
@@ -26,4 +26,16 @@ def create(request):
             return redirect('tasks')
         else:
             error = 'Something went wrong.'
-            return render(request, 'create.html', {'form': TaskForm(),'error':error})
+            return render(request, 'create.html', {'form': TaskForm(), 'error': error})
+
+
+def delete_task(request, taskId):
+    task = get_object_or_404(Task, id=taskId)
+    task.delete()
+    return redirect('tasks')
+
+
+def detail(request, taskId):
+    task = get_object_or_404(Task, id=taskId)
+    form = TaskForm(instance=task)
+    return render(request, 'detail.html', {'form': form, 'task': task})

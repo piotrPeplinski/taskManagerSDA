@@ -1,3 +1,8 @@
 <h1>Your tasks</h1>
 
-{{tasks}}
+
+{% for task in tasks %}
+<a href="{% url 'detail' task.id %}">
+    <h2>{{task.title}}</h2>
+</a>
+{% endfor %}
