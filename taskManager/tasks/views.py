@@ -37,5 +37,14 @@ def delete_task(request, taskId):
 
 def detail(request, taskId):
     task = get_object_or_404(Task, id=taskId)
-    form = TaskForm(instance=task)
-    return render(request, 'detail.html', {'form': form, 'task': task})
+    if request.method == 'GET':
+        form = TaskForm(instance=task)
+        return render(request, 'detail.html', {'form': form, 'task': task})
+    else:  # post
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+        else:
+            error = 'Something went wrong.'
+            return render(request, 'detail.html', {'form': form, 'task': task, 'error': error})

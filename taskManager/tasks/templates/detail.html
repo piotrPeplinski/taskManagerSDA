@@ -1,3 +1,11 @@
+<h1>Edit task</h1>
+
+
+{% if error %}
+    <h3>{{error}}</h3>
+{% endif %}
+    
+
 <form action="{% url 'detail' task.id %}" method="post">
     {{form}}
     {% csrf_token %}
