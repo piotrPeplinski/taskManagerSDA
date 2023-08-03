@@ -4,6 +4,8 @@
 {% if user.is_authenticated %}
 <h1>Welcome {{user}}</h1>
 <a href="{% url 'logout_user' %}">Log out</a>
+<a href="{% url 'tasks' %}">View tasks</a>
+<a href="{% url 'create' %}">Create</a>
 {% else %}
 <a href="{% url 'register' %}">Register</a>
 <a href="{% url 'login_user' %}">Log in</a>
